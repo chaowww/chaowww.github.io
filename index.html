@@ -41,6 +41,7 @@
       -moz-osx-font-smoothing:grayscale;
       -webkit-backdrop-filter: blur(2px);
       backdrop-filter: blur(2px);
+      min-height:100vh;
     }
 
     .wrap{
@@ -124,6 +125,9 @@
       overflow:visible;
     }
 
+    /* Ensure views/cards keep consistent dark translucent look */
+    .view { background: transparent; color: var(--text); }
+
     h2{margin:0 0 8px 0;color:var(--text);font-size:18px}
     .muted{color:var(--muted);font-size:13px}
     .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:12px}
@@ -146,10 +150,10 @@
 
     @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-    /* poster image */
+    /* poster image: give a subtle card-like background so a missing/white image doesn't break visual flow */
     .poster{
       border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);
-      background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.006));
+      background:linear-gradient(180deg, rgba(124,108,255,0.04), rgba(34,211,170,0.02));
       display:block;width:100%;height:auto;max-height:720px;object-fit:cover;
     }
 
@@ -203,13 +207,13 @@
         <div class="lang-zh">
           <h2 id="homeTitle" lang="zh">个人与实验室简介</h2>
           <p lang="zh" class="muted">
-            我是北京邮电大学电子工程学院副教授，研究员，博士生导师，长期从事光电子集成电路、智能计算、光传感、光互连及片上系统集成方向研究，以第一及共同作者在Nature Photonics等发表高水平学术论文30余篇，研制世界首台百纳米生物粒子光电智能传感平台，原创性提出百万TOPS通用光学计算芯片、架构及系统，申请国家发明专利10余项，主持/参与国家自然科学基金重大/重点项目、科技部重点研发青年科学家项目、科技部科技创新2030重大项目及国家重点研发计划项目等多项。
+            我是北京邮电大学电子工程学院副教授，研究员，博士生导师，长期从事光电子集成电路、智能计算、光传感、光互连及片上系统集成方向研究等。
           </p>
         </div>
         <div class="lang-en">
           <h2 lang="en">About & Lab</h2>
           <p lang="en" class="muted">
-            I am an Associate Professor and Researcher at Beijing University of Posts and Telecommunications (BUPT) and a PhD supervisor. My research focuses on photonic/electronic integrated circuits and devices, photonic intelligent computing, optical sensing and interconnects, and system-on-chip integration. As first or co-first author I have published 30+ high-impact papers in venues including Nature Photonics; I led the development of the world’s first sub-100nm bio-particle optoelectronic intelligent sensing platform; I originated designs and system concepts for million-TOPS-class general-purpose optical computing chips; I have filed 10+ national invention patents and participated in multiple national-level projects (NSFC major/key programs, MOST key R&D plans, Science & Technology Innovation 2030 projects, etc.).
+            I am an Associate Professor and Researcher at Beijing University of Posts and Telecommunications (BUPT) and a PhD supervisor. My research focuses on photonic/electronic integrated circuits and related topics.
           </p>
         </div>
       </section>
@@ -306,7 +310,7 @@
           </div>
 
           <h3 lang="zh" style="margin-top:12px">联系方式</h3>
-          <p class="muted" lang="zh">如感兴趣，请将简历发送至 <a href="mailto:chaow@bupt.edu.cn">chaow@bupt.edu.cn</a>，邮件主题请注明示例：<strong>“2027+直博+姓名”</strong>。</p>
+          <p class="muted" lang="zh">如感兴趣，请将简历发送至 <a href="mailto:chaow@bupt.edu.cn">chaow@bupt.edu.cn</a>，邮件主题请注明示例：<strong>“2027+直博+姓名”</strong></p>
         </div>
 
         <div class="lang-en">
@@ -352,7 +356,7 @@
           </div>
 
           <h3 lang="en" style="margin-top:12px">Contact</h3>
-          <p class="muted" lang="en">If interested, please send your CV to <a href="mailto:chaow@bupt.edu.cn">chaow@bupt.edu.cn</a>. Use a subject line example: <strong>"2027+DirectPhD+YourName"</strong>.</p>
+          <p class="muted" lang="en">If interested, please send your CV to <a href="mailto:chaow@bupt.edu.cn">chaow@bupt.edu.cn</a>. Use a subject line example: <strong>"2027+DirectPhD+YourName"</strong></p>
         </div>
       </section>
     </main>
