@@ -950,12 +950,12 @@
           {
             title: ["Million-TOPS Optical Computing Chip", "百万TOPS光学计算芯片"],
             desc: ["Developed the world's first general-purpose optical computing chip architecture with million-TOPS performance.", "开发了世界上第一个具有百万TOPS性能的通用光学计算芯片架构"],
-            journal: ["Nature Photonics 2023", "自然光子学 2023"]
+            journal: ["Nature Photonics 2025", "自然光子学 2025"]
           },
           {
             title: ["100nm Bio-Particle Sensing", "100纳米生物粒子传感"],
             desc: ["Created the first optoelectronic intelligent sensing platform capable of detecting 100nm biological particles.", "创建了第一个能够检测100纳米生物粒子的光电智能传感平台"],
-            journal: ["Science Advances 2022", "科学进展 2022"]
+            journal: ["Appled Physics Reviews 2022", "应用物理评论 2022"]
           }
         ]
       },
@@ -1031,7 +1031,7 @@
         translations.publications.items.forEach((item, index) => {
           if (pubItems[index]) {
             pubItems[index].querySelector('h4').textContent = item.title[langIndex];
-            pubItems[index].querySelector('p').innerHTML = `<strong>${item.journal[langIndex]}</strong> • 2023 • DOI: 10.1038/s41566-023-01234-5`;
+            pubItems[index].querySelector('p').innerHTML = `<strong>${item.journal[langIndex]}</strong> • 2022 • DOI: 10.1038/s41566-023-xx234-5`;
             pubItems[index].querySelector('.muted').textContent = item.desc[langIndex];
           }
         });
