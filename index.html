@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="EN">
 <head>
   <meta charset="utf-8" />
   <title>王超 · 光电智能计算与具身感知融合</title>
@@ -102,6 +102,7 @@
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
+      align-items: center;
     }
 
     .nav-btn {
@@ -131,6 +132,28 @@
       background: var(--warning);
       color: white;
       border-color: var(--warning);
+    }
+
+    .language-switch {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      background: transparent;
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .language-switch:hover {
+      background: rgba(59, 130, 246, 0.1);
+    }
+
+    .language-switch .lang-flag {
+      font-size: 1rem;
     }
 
     /* 主内容区 */
@@ -361,6 +384,7 @@
     .item-actions {
       display: flex;
       gap: 8px;
+      min-width: 80px;
     }
 
     /* 表单样式 */
@@ -561,6 +585,15 @@
       margin-top: 20px;
     }
 
+    /* 语言切换样式 */
+    .lang-content {
+      display: none;
+    }
+
+    .lang-content.active {
+      display: block;
+    }
+
     /* 响应式调整 */
     @media (max-width: 768px) {
       body {
@@ -595,16 +628,20 @@
       <div class="logo">
         <div class="logo-icon">C</div>
         <div class="logo-text">
-          <h1>王超 · 光电智能实验室</h1>
-          <p>光电智能计算 · 具身感知融合 · 片上系统集成</p>
+          <h1 id="site-title">王超 · 光电智能实验室</h1>
+          <p id="site-subtitle">光电智能计算 · 具身感知融合 · 片上系统集成</p>
         </div>
       </div>
       <nav class="nav">
-        <button class="nav-btn" data-page="home" onclick="showPage('home')">首页</button>
-        <button class="nav-btn" data-page="publications" onclick="showPage('publications')">出版物</button>
-        <button class="nav-btn" data-page="people" onclick="showPage('people')">人员</button>
-        <button class="nav-btn" data-page="positions" onclick="showPage('positions')">招聘</button>
+        <button class="nav-btn" data-page="home" onclick="showPage('home')" id="nav-home">首页</button>
+        <button class="nav-btn" data-page="publications" onclick="showPage('publications')" id="nav-publications">出版物</button>
+        <button class="nav-btn" data-page="people" onclick="showPage('people')" id="nav-people">人员</button>
+        <button class="nav-btn" data-page="positions" onclick="showPage('positions')" id="nav-positions">招聘</button>
         <button class="nav-btn edit-btn" onclick="toggleEditMode()" id="editModeBtn">开启编辑模式</button>
+        <button class="language-switch" onclick="toggleLanguage()" id="languageBtn">
+          <span class="lang-flag">🇨🇳</span>
+          <span>中文</span>
+        </button>
       </nav>
     </header>
 
@@ -616,31 +653,31 @@
         <div class="content-card" id="home-content" style="display: block;">
           <div class="content-header">
             <div>
-              <h2>个人与实验室简介</h2>
-              <p>关于实验室的研究方向、团队介绍等信息</p>
+              <h2 id="home-title">个人与实验室简介</h2>
+              <p id="home-subtitle">关于实验室的研究方向、团队介绍等信息</p>
             </div>
           </div>
           <div class="editable-content">
             <div class="editable-section" id="home-intro">
               <div class="section-header">
-                <h4>实验室介绍</h4>
+                <h4 id="home-intro-title">实验室介绍</h4>
                 <div class="edit-controls" style="display: none;">
-                  <button class="control-btn edit" onclick="editSection('home-intro')">编辑</button>
+                  <button class="control-btn edit" onclick="editSection('home-intro', 'intro')">编辑</button>
                 </div>
               </div>
-              <div class="content-display">
+              <div class="content-display" id="home-intro-content">
                 <p>我是北京邮电大学副教授，研究员，硕士生和博士生导师，长期从事光电子集成电路、智能计算、光传感、光互连及片上系统集成方向研究，以第一及共同作者在Nature Photonics等发表高水平学术论文30余篇，研制世界首台百纳米生物粒子光电智能传感平台，原创性提出百万TOPS通用光学计算芯片、架构及系统，申请国家发明专利10余项，主持/参与国家自然科学基金重大/重点项目、科技部重点研发青年科学家项目、科技部科技创新2030重大项目及国家重点研发计划项目等多项。</p>
               </div>
             </div>
             
             <div class="editable-section" id="research-focus">
               <div class="section-header">
-                <h4>研究方向</h4>
+                <h4 id="research-focus-title">研究方向</h4>
                 <div class="edit-controls" style="display: none;">
-                  <button class="control-btn edit" onclick="editSection('research-focus')">编辑</button>
+                  <button class="control-btn edit" onclick="editSection('research-focus', 'focus')">编辑</button>
                 </div>
               </div>
-              <div class="content-display">
+              <div class="content-display" id="research-focus-content">
                 <ul>
                   <li>光电智能计算芯片与系统</li>
                   <li>具身感知融合技术</li>
@@ -657,8 +694,8 @@
         <div class="content-card" id="publications-content" style="display: none;">
           <div class="content-header">
             <div>
-              <h2>出版物</h2>
-              <p>实验室发表的学术论文、专利等成果</p>
+              <h2 id="publications-title">出版物</h2>
+              <p id="publications-subtitle">实验室发表的学术论文、专利等成果</p>
             </div>
             <div class="editor-actions" style="display: none;">
               <button class="editor-btn primary" onclick="addPublication()">添加出版物</button>
@@ -668,9 +705,9 @@
             <div class="list-item" data-id="1">
               <div class="item-content">
                 <div class="item-text">
-                  <h4>High-performance photonic computing chip</h4>
-                  <p><strong>Nature Photonics</strong> • 2023 • DOI: 10.1038/s41566-023-01234-5</p>
-                  <p class="muted">提出了一种基于硅基光子集成技术的百万TOPS计算芯片架构</p>
+                  <h4 class="pub-title">High-performance photonic computing chip</h4>
+                  <p class="pub-details"><strong class="pub-journal">Nature Photonics</strong> • <span class="pub-year">2023</span> • <span class="pub-doi">DOI: 10.1038/s41566-023-01234-5</span></p>
+                  <p class="muted pub-description">提出了一种基于硅基光子集成技术的百万TOPS计算芯片架构</p>
                 </div>
                 <div class="item-actions" style="display: none;">
                   <button class="control-btn edit" onclick="editPublication(1)">编辑</button>
@@ -682,9 +719,9 @@
             <div class="list-item" data-id="2">
               <div class="item-content">
                 <div class="item-text">
-                  <h4>Optical neural networks for edge computing</h4>
-                  <p><strong>Science Advances</strong> • 2022 • DOI: 10.1126/sciadv.abn7890</p>
-                  <p class="muted">面向边缘计算的光神经网络架构设计与实现</p>
+                  <h4 class="pub-title">Optical neural networks for edge computing</h4>
+                  <p class="pub-details"><strong class="pub-journal">Science Advances</strong> • <span class="pub-year">2022</span> • <span class="pub-doi">DOI: 10.1126/sciadv.abn7890</span></p>
+                  <p class="muted pub-description">面向边缘计算的光神经网络架构设计与实现</p>
                 </div>
                 <div class="item-actions" style="display: none;">
                   <button class="control-btn edit" onclick="editPublication(2)">编辑</button>
@@ -699,8 +736,8 @@
         <div class="content-card" id="people-content" style="display: none;">
           <div class="content-header">
             <div>
-              <h2>团队成员</h2>
-              <p>实验室成员介绍与研究方向</p>
+              <h2 id="people-title">团队成员</h2>
+              <p id="people-subtitle">实验室成员介绍与研究方向</p>
             </div>
             <div class="editor-actions" style="display: none;">
               <button class="editor-btn primary" onclick="addPerson()">添加成员</button>
@@ -710,9 +747,9 @@
             <div class="list-item" data-id="1">
               <div class="item-content">
                 <div class="item-text">
-                  <h4>王超</h4>
-                  <p><strong>实验室负责人</strong> • 副教授/研究员/博士生导师</p>
-                  <p class="muted">研究方向：光电智能计算、片上系统集成</p>
+                  <h4 class="person-name">王超</h4>
+                  <p class="person-role"><strong>实验室负责人</strong> • <span class="person-title">副教授/研究员/博士生导师</span></p>
+                  <p class="muted person-research">研究方向：光电智能计算、片上系统集成</p>
                 </div>
                 <div class="item-actions" style="display: none;">
                   <button class="control-btn edit" onclick="editPerson(1)">编辑</button>
@@ -724,9 +761,9 @@
             <div class="list-item" data-id="2">
               <div class="item-content">
                 <div class="item-text">
-                  <h4>张明</h4>
-                  <p><strong>博士研究生</strong> • 2021级</p>
-                  <p class="muted">研究方向：光子神经网络芯片设计</p>
+                  <h4 class="person-name">张明</h4>
+                  <p class="person-role"><strong>博士研究生</strong> • <span class="person-title">2021级</span></p>
+                  <p class="muted person-research">研究方向：光子神经网络芯片设计</p>
                 </div>
                 <div class="item-actions" style="display: none;">
                   <button class="control-btn edit" onclick="editPerson(2)">编辑</button>
@@ -741,31 +778,31 @@
         <div class="content-card" id="positions-content" style="display: none;">
           <div class="content-header">
             <div>
-              <h2>招聘信息</h2>
-              <p>长期招收博士后、博士/硕士研究生、科研助理</p>
+              <h2 id="positions-title">招聘信息</h2>
+              <p id="positions-subtitle">长期招收博士后、博士/硕士研究生、科研助理</p>
             </div>
           </div>
           <div class="editable-content">
             <div class="editable-section" id="positions-intro">
               <div class="section-header">
-                <h4>招聘说明</h4>
+                <h4 id="positions-intro-title">招聘说明</h4>
                 <div class="edit-controls" style="display: none;">
-                  <button class="control-btn edit" onclick="editSection('positions-intro')">编辑</button>
+                  <button class="control-btn edit" onclick="editSection('positions-intro', 'intro')">编辑</button>
                 </div>
               </div>
-              <div class="content-display">
+              <div class="content-display" id="positions-intro-content">
                 <p>实验室长期招收博士后、博士研究生、硕士研究生及科研助理。我们提供具有竞争力的薪酬待遇、优良的科研环境和广阔的发展空间。</p>
               </div>
             </div>
             
             <div class="editable-section" id="positions-details">
               <div class="section-header">
-                <h4>具体要求</h4>
+                <h4 id="positions-details-title">具体要求</h4>
                 <div class="edit-controls" style="display: none;">
-                  <button class="control-btn edit" onclick="editSection('positions-details')">编辑</button>
+                  <button class="control-btn edit" onclick="editSection('positions-details', 'details')">编辑</button>
                 </div>
               </div>
-              <div class="content-display">
+              <div class="content-display" id="positions-details-content">
                 <ul>
                   <li><strong>博士后</strong>：光学工程、电子工程、计算机科学等相关专业博士毕业生</li>
                   <li><strong>博士研究生</strong>：硕士学历，有光电集成或AI算法研究经验者优先</li>
@@ -777,12 +814,12 @@
             
             <div class="editable-section" id="positions-benefits">
               <div class="section-header">
-                <h4>待遇与发展</h4>
+                <h4 id="positions-benefits-title">待遇与发展</h4>
                 <div class="edit-controls" style="display: none;">
-                  <button class="control-btn edit" onclick="editSection('positions-benefits')">编辑</button>
+                  <button class="control-btn edit" onclick="editSection('positions-benefits', 'benefits')">编辑</button>
                 </div>
               </div>
-              <div class="content-display">
+              <div class="content-display" id="positions-benefits-content">
                 <ul>
                   <li>具有竞争力的科研津贴和绩效奖励</li>
                   <li>国内外学术交流与会议支持</li>
@@ -800,29 +837,29 @@
       <aside class="sidebar">
         <div class="sidebar-card editor-panel" id="editorPanel">
           <div class="editor-header">
-            <h3>内容编辑面板</h3>
+            <h3 id="editor-title">内容编辑面板</h3>
           </div>
-          <p style="color: var(--muted); font-size: 0.875rem; margin-bottom: 20px;">
+          <p style="color: var(--muted); font-size: 0.875rem; margin-bottom: 20px;" id="editor-description">
             选择要编辑的内容区域，点击编辑按钮进行修改。
           </p>
           
           <div class="editor-actions">
-            <button class="editor-btn secondary" onclick="saveAllEdits()">保存所有修改</button>
-            <button class="editor-btn secondary" onclick="changePassword()">修改密码</button>
-            <button class="editor-btn danger" onclick="toggleEditMode()">退出编辑模式</button>
+            <button class="editor-btn secondary" onclick="saveAllEdits()" id="save-all-btn">保存所有修改</button>
+            <button class="editor-btn secondary" onclick="changePassword()" id="change-password-btn">修改密码</button>
+            <button class="editor-btn danger" onclick="toggleEditMode()" id="exit-edit-btn">退出编辑模式</button>
           </div>
         </div>
         
         <div class="sidebar-card">
-          <h3 style="margin-bottom: 12px;">实验室信息</h3>
+          <h3 style="margin-bottom: 12px;" id="lab-info-title">实验室信息</h3>
           <p style="color: var(--muted); margin-bottom: 8px;">
-            <strong>地点：</strong>北京邮电大学科研楼
+            <strong id="lab-location-label">地点：</strong><span id="lab-location">北京邮电大学科研楼</span>
           </p>
           <p style="color: var(--muted); margin-bottom: 8px;">
-            <strong>联系方式：</strong>chaow@bupt.edu.cn
+            <strong id="lab-contact-label">联系方式：</strong><span id="lab-contact">chaow@bupt.edu.cn</span>
           </p>
           <p style="color: var(--muted);">
-            <strong>更新时间：</strong>2024年12月
+            <strong id="lab-update-label">更新时间：</strong><span id="lab-update">2024年12月</span>
           </p>
         </div>
       </aside>
@@ -830,19 +867,19 @@
 
     <!-- 页脚 -->
     <footer class="footer">
-      <p>© 2024 北京邮电大学光电智能计算实验室 · 保留所有权利</p>
+      <p id="footer-text">© 2024 北京邮电大学光电智能计算实验室 · 保留所有权利</p>
     </footer>
   </div>
 
   <!-- 授权模态框 -->
   <div class="auth-panel" id="authPanel">
     <div class="auth-content">
-      <h3>编辑模式授权</h3>
-      <p id="authMessage">请输入授权密码以开启编辑模式</p>
+      <h3 id="auth-title">编辑模式授权</h3>
+      <p id="auth-message">请输入授权密码以开启编辑模式</p>
       <input type="password" class="auth-input" id="authPassword" placeholder="请输入密码" />
       <div class="auth-buttons">
-        <button class="editor-btn secondary" onclick="closeAuthPanel()">取消</button>
-        <button class="editor-btn primary" onclick="authenticate()">确认</button>
+        <button class="editor-btn secondary" onclick="closeAuthPanel()" id="auth-cancel-btn">取消</button>
+        <button class="editor-btn primary" onclick="authenticate()" id="auth-confirm-btn">确认</button>
       </div>
     </div>
   </div>
@@ -850,13 +887,13 @@
   <!-- 密码设置面板 -->
   <div class="setup-panel" id="setupPanel">
     <div class="setup-content">
-      <h3>首次设置编辑密码</h3>
-      <p>这是您第一次使用编辑功能，请设置一个密码用于后续编辑验证。</p>
+      <h3 id="setup-title">首次设置编辑密码</h3>
+      <p id="setup-message">这是您第一次使用编辑功能，请设置一个密码用于后续编辑验证。</p>
       <input type="password" class="setup-input" id="setupPassword" placeholder="设置新密码" />
       <input type="password" class="setup-input" id="setupConfirmPassword" placeholder="确认新密码" />
       <div class="setup-buttons">
-        <button class="editor-btn secondary" onclick="cancelSetup()">取消</button>
-        <button class="editor-btn primary" onclick="setupPassword()">设置密码</button>
+        <button class="editor-btn secondary" onclick="cancelSetup()" id="setup-cancel-btn">取消</button>
+        <button class="editor-btn primary" onclick="setupPassword()" id="setup-confirm-btn">设置密码</button>
       </div>
     </div>
   </div>
@@ -870,18 +907,18 @@
       </div>
       <div class="modal-body">
         <div class="form-group">
-          <label for="editTitle">标题</label>
+          <label for="editTitle" id="modal-title-label">标题</label>
           <input type="text" class="form-input" id="editTitle">
         </div>
         <div class="form-group">
-          <label for="editContent">内容</label>
+          <label for="editContent" id="modal-content-label">内容</label>
           <textarea class="form-input" id="editContent" rows="6"></textarea>
         </div>
         <div class="form-group" id="editFields"></div>
       </div>
       <div class="modal-footer">
-        <button class="editor-btn secondary" onclick="closeModal()">取消</button>
-        <button class="editor-btn primary" onclick="saveEdit()">保存</button>
+        <button class="editor-btn secondary" onclick="closeModal()" id="modal-cancel-btn">取消</button>
+        <button class="editor-btn primary" onclick="saveEdit()" id="modal-save-btn">保存</button>
       </div>
     </div>
   </div>
@@ -892,6 +929,129 @@
     let currentEditingId = null;
     let currentEditingType = null;
     let editPassword = localStorage.getItem('siteEditPassword') || null;
+    let currentLanguage = 'zh'; // 'zh' 或 'en'
+
+    // 双语内容配置
+    const translations = {
+      zh: {
+        // 导航
+        'nav-home': '首页',
+        'nav-publications': '出版物',
+        'nav-people': '人员',
+        'nav-positions': '招聘',
+        'editModeBtn': '开启编辑模式',
+        'languageBtn': '中文',
+        'languageFlag': '🇨🇳',
+        
+        // 页面标题
+        'site-title': '王超 · 光电智能实验室',
+        'site-subtitle': '光电智能计算 · 具身感知融合 · 片上系统集成',
+        'home-title': '个人与实验室简介',
+        'home-subtitle': '关于实验室的研究方向、团队介绍等信息',
+        'publications-title': '出版物',
+        'publications-subtitle': '实验室发表的学术论文、专利等成果',
+        'people-title': '团队成员',
+        'people-subtitle': '实验室成员介绍与研究方向',
+        'positions-title': '招聘信息',
+        'positions-subtitle': '长期招收博士后、博士/硕士研究生、科研助理',
+        
+        // 编辑面板
+        'editor-title': '内容编辑面板',
+        'editor-description': '选择要编辑的内容区域，点击编辑按钮进行修改。',
+        'save-all-btn': '保存所有修改',
+        'change-password-btn': '修改密码',
+        'exit-edit-btn': '退出编辑模式',
+        
+        // 实验室信息
+        'lab-info-title': '实验室信息',
+        'lab-location-label': '地点：',
+        'lab-location': '北京邮电大学科研楼',
+        'lab-contact-label': '联系方式：',
+        'lab-contact': 'chaow@bupt.edu.cn',
+        'lab-update-label': '更新时间：',
+        'lab-update': '2024年12月',
+        
+        // 页脚
+        'footer-text': '© 2024 北京邮电大学光电智能计算实验室 · 保留所有权利',
+        
+        // 授权面板
+        'auth-title': '编辑模式授权',
+        'auth-message': '请输入授权密码以开启编辑模式',
+        'auth-cancel-btn': '取消',
+        'auth-confirm-btn': '确认',
+        
+        // 密码设置面板
+        'setup-title': '首次设置编辑密码',
+        'setup-message': '这是您第一次使用编辑功能，请设置一个密码用于后续编辑验证。',
+        'setup-cancel-btn': '取消',
+        'setup-confirm-btn': '设置密码',
+        
+        // 编辑模态框
+        'modal-title-label': '标题',
+        'modal-content-label': '内容',
+        'modal-cancel-btn': '取消',
+        'modal-save-btn': '保存'
+      },
+      en: {
+        // 导航
+        'nav-home': 'Home',
+        'nav-publications': 'Publications',
+        'nav-people': 'People',
+        'nav-positions': 'Positions',
+        'editModeBtn': 'Enable Edit Mode',
+        'languageBtn': 'English',
+        'languageFlag': '🇺🇸',
+        
+        // 页面标题
+        'site-title': 'Chao Wang · Photonic AI Lab',
+        'site-subtitle': 'Photonic AI Computing · Embodied Perception · On-chip System Integration',
+        'home-title': 'Personal and Lab Introduction',
+        'home-subtitle': 'About research directions, team introduction and other information',
+        'publications-title': 'Publications',
+        'publications-subtitle': 'Academic papers, patents and other achievements',
+        'people-title': 'Team Members',
+        'people-subtitle': 'Lab members introduction and research directions',
+        'positions-title': 'Open Positions',
+        'positions-subtitle': 'Long-term recruitment: Postdocs, PhD/Master students, Research Assistants',
+        
+        // 编辑面板
+        'editor-title': 'Content Editor Panel',
+        'editor-description': 'Select content area to edit, click edit button to modify.',
+        'save-all-btn': 'Save All Changes',
+        'change-password-btn': 'Change Password',
+        'exit-edit-btn': 'Exit Edit Mode',
+        
+        // 实验室信息
+        'lab-info-title': 'Lab Information',
+        'lab-location-label': 'Location: ',
+        'lab-location': 'BUPT Research Building',
+        'lab-contact-label': 'Contact: ',
+        'lab-contact': 'chaow@bupt.edu.cn',
+        'lab-update-label': 'Updated: ',
+        'lab-update': 'Dec 2024',
+        
+        // 页脚
+        'footer-text': '© 2024 BUPT Photonic AI Computing Lab · All Rights Reserved',
+        
+        // 授权面板
+        'auth-title': 'Edit Mode Authorization',
+        'auth-message': 'Please enter authorization password to enable edit mode',
+        'auth-cancel-btn': 'Cancel',
+        'auth-confirm-btn': 'Confirm',
+        
+        // 密码设置面板
+        'setup-title': 'First-time Password Setup',
+        'setup-message': 'This is your first time using edit function, please set a password for future edit verification.',
+        'setup-cancel-btn': 'Cancel',
+        'setup-confirm-btn': 'Set Password',
+        
+        // 编辑模态框
+        'modal-title-label': 'Title',
+        'modal-content-label': 'Content',
+        'modal-cancel-btn': 'Cancel',
+        'modal-save-btn': 'Save'
+      }
+    };
 
     // 页面切换
     function showPage(pageId) {
@@ -917,6 +1077,44 @@
         if (targetBtn) {
           targetBtn.classList.add('active');
         }
+      }
+    }
+
+    // 语言切换
+    function toggleLanguage() {
+      currentLanguage = currentLanguage === 'zh' ? 'en' : 'zh';
+      applyLanguage(currentLanguage);
+      
+      // 保存语言偏好到本地存储
+      localStorage.setItem('siteLanguage', currentLanguage);
+    }
+
+    // 应用语言
+    function applyLanguage(lang) {
+      const langData = translations[lang];
+      
+      // 更新所有可翻译元素
+      for (const [key, value] of Object.entries(langData)) {
+        const element = document.getElementById(key);
+        if (element) {
+          if (key === 'languageBtn') {
+            // 特殊处理语言按钮
+            const flagSpan = element.querySelector('.lang-flag');
+            flagSpan.textContent = translations[lang].languageFlag;
+            const textSpan = element.querySelector('span:not(.lang-flag)');
+            if (textSpan) textSpan.textContent = value;
+          } else {
+            element.textContent = value;
+          }
+        }
+      }
+      
+      // 更新按钮文本
+      const languageBtn = document.getElementById('languageBtn');
+      if (lang === 'zh') {
+        languageBtn.innerHTML = '<span class="lang-flag">🇨🇳</span><span>中文</span>';
+      } else {
+        languageBtn.innerHTML = '<span class="lang-flag">🇺🇸</span><span>English</span>';
       }
     }
 
@@ -966,7 +1164,7 @@
     function cancelSetup() {
       closeSetupPanel();
       // 退出编辑模式
-      document.getElementById('editModeBtn').textContent = '开启编辑模式';
+      document.getElementById('editModeBtn').textContent = currentLanguage === 'zh' ? '开启编辑模式' : 'Enable Edit Mode';
     }
 
     // 设置密码
@@ -975,17 +1173,17 @@
       const confirmPassword = document.getElementById('setupConfirmPassword').value;
       
       if (!password) {
-        alert('密码不能为空！');
+        alert(currentLanguage === 'zh' ? '密码不能为空！' : 'Password cannot be empty!');
         return;
       }
       
       if (password !== confirmPassword) {
-        alert('两次输入的密码不一致！');
+        alert(currentLanguage === 'zh' ? '两次输入的密码不一致！' : 'Passwords do not match!');
         return;
       }
       
       if (password.length < 4) {
-        alert('密码长度至少为4位！');
+        alert(currentLanguage === 'zh' ? '密码长度至少为4位！' : 'Password must be at least 4 characters!');
         return;
       }
       
@@ -1004,34 +1202,34 @@
     function changePassword() {
       if (!editMode) return;
       
-      const oldPassword = prompt('请输入当前密码：');
+      const oldPassword = prompt(currentLanguage === 'zh' ? '请输入当前密码：' : 'Please enter current password:');
       if (oldPassword !== editPassword) {
-        alert('密码错误！');
+        alert(currentLanguage === 'zh' ? '密码错误！' : 'Wrong password!');
         return;
       }
       
-      const newPassword = prompt('请输入新密码：');
-      const confirmPassword = prompt('请确认新密码：');
+      const newPassword = prompt(currentLanguage === 'zh' ? '请输入新密码：' : 'Please enter new password:');
+      const confirmPassword = prompt(currentLanguage === 'zh' ? '请确认新密码：' : 'Please confirm new password:');
       
       if (!newPassword) {
-        alert('新密码不能为空！');
+        alert(currentLanguage === 'zh' ? '新密码不能为空！' : 'New password cannot be empty!');
         return;
       }
       
       if (newPassword !== confirmPassword) {
-        alert('两次输入的密码不一致！');
+        alert(currentLanguage === 'zh' ? '两次输入的密码不一致！' : 'Passwords do not match!');
         return;
       }
       
       if (newPassword.length < 4) {
-        alert('密码长度至少为4位！');
+        alert(currentLanguage === 'zh' ? '密码长度至少为4位！' : 'Password must be at least 4 characters!');
         return;
       }
       
       // 更新密码
       localStorage.setItem('siteEditPassword', newPassword);
       editPassword = newPassword;
-      alert('密码修改成功！');
+      alert(currentLanguage === 'zh' ? '密码修改成功！' : 'Password changed successfully!');
     }
 
     // 授权验证
@@ -1044,7 +1242,7 @@
         // 关闭授权面板
         closeAuthPanel();
       } else {
-        alert('密码错误，请重试！');
+        alert(currentLanguage === 'zh' ? '密码错误，请重试！' : 'Wrong password, please try again!');
         document.getElementById('authPassword').value = '';
         document.getElementById('authPassword').focus();
       }
@@ -1054,7 +1252,7 @@
     function enterEditMode() {
       editMode = true;
       document.getElementById('editorPanel').classList.add('show');
-      document.getElementById('editModeBtn').textContent = '退出编辑模式';
+      document.getElementById('editModeBtn').textContent = currentLanguage === 'zh' ? '退出编辑模式' : 'Exit Edit Mode';
       
       // 显示编辑控制按钮
       document.querySelectorAll('.edit-controls').forEach(controls => {
@@ -1068,13 +1266,30 @@
       document.querySelectorAll('.editor-actions').forEach(actions => {
         actions.style.display = 'flex';
       });
+      
+      // 更新人员页面编辑按钮文字
+      updatePeoplePageButtons();
+    }
+
+    // 更新人员页面按钮文字
+    function updatePeoplePageButtons() {
+      const editBtns = document.querySelectorAll('.control-btn.edit');
+      const deleteBtns = document.querySelectorAll('.control-btn.delete');
+      
+      editBtns.forEach(btn => {
+        btn.textContent = currentLanguage === 'zh' ? '编辑' : 'Edit';
+      });
+      
+      deleteBtns.forEach(btn => {
+        btn.textContent = currentLanguage === 'zh' ? '删除' : 'Delete';
+      });
     }
 
     // 退出编辑模式
     function exitEditMode() {
       editMode = false;
       document.getElementById('editorPanel').classList.remove('show');
-      document.getElementById('editModeBtn').textContent = '开启编辑模式';
+      document.getElementById('editModeBtn').textContent = currentLanguage === 'zh' ? '开启编辑模式' : 'Enable Edit Mode';
       
       // 隐藏编辑控制按钮
       document.querySelectorAll('.edit-controls').forEach(controls => {
@@ -1103,7 +1318,7 @@
     }
 
     // 编辑章节内容
-    function editSection(sectionId) {
+    function editSection(sectionId, sectionType) {
       if (!editMode) return;
       
       const section = document.getElementById(sectionId);
@@ -1122,15 +1337,15 @@
       // 更新控制按钮
       const controls = section.querySelector('.edit-controls');
       controls.innerHTML = `
-        <button class="control-btn save" onclick="saveSection('${sectionId}')">保存</button>
-        <button class="control-btn cancel" onclick="cancelEdit('${sectionId}')">取消</button>
+        <button class="control-btn save" onclick="saveSection('${sectionId}', '${sectionType}')">${currentLanguage === 'zh' ? '保存' : 'Save'}</button>
+        <button class="control-btn cancel" onclick="cancelEdit('${sectionId}', '${sectionType}')">${currentLanguage === 'zh' ? '取消' : 'Cancel'}</button>
       `;
       
       section.classList.add('editing');
     }
 
     // 保存章节编辑
-    function saveSection(sectionId) {
+    function saveSection(sectionId, sectionType) {
       const section = document.getElementById(sectionId);
       const editArea = section.querySelector('.content-edit');
       const display = section.querySelector('.content-display');
@@ -1141,13 +1356,13 @@
       
       // 恢复控制按钮
       const controls = section.querySelector('.edit-controls');
-      controls.innerHTML = `<button class="control-btn edit" onclick="editSection('${sectionId}')">编辑</button>`;
+      controls.innerHTML = `<button class="control-btn edit" onclick="editSection('${sectionId}', '${sectionType}')">${currentLanguage === 'zh' ? '编辑' : 'Edit'}</button>`;
       
       section.classList.remove('editing');
     }
 
     // 取消编辑
-    function cancelEdit(sectionId) {
+    function cancelEdit(sectionId, sectionType) {
       const section = document.getElementById(sectionId);
       const editArea = section.querySelector('.content-edit');
       const display = section.querySelector('.content-display');
@@ -1159,7 +1374,7 @@
       
       // 恢复控制按钮
       const controls = section.querySelector('.edit-controls');
-      controls.innerHTML = `<button class="control-btn edit" onclick="editSection('${sectionId}')">编辑</button>`;
+      controls.innerHTML = `<button class="control-btn edit" onclick="editSection('${sectionId}', '${sectionType}')">${currentLanguage === 'zh' ? '编辑' : 'Edit'}</button>`;
       
       section.classList.remove('editing');
     }
@@ -1170,20 +1385,20 @@
       
       currentEditingType = 'publication';
       currentEditingId = null;
-      document.getElementById('modalTitle').textContent = '添加出版物';
+      document.getElementById('modalTitle').textContent = currentLanguage === 'zh' ? '添加出版物' : 'Add Publication';
       
       // 设置表单字段
       document.getElementById('editFields').innerHTML = `
         <div class="form-group">
-          <label for="editJournal">期刊/会议</label>
+          <label for="editJournal">${currentLanguage === 'zh' ? '期刊/会议' : 'Journal/Conference'}</label>
           <input type="text" class="form-input" id="editJournal">
         </div>
         <div class="form-group">
-          <label for="editYear">年份</label>
+          <label for="editYear">${currentLanguage === 'zh' ? '年份' : 'Year'}</label>
           <input type="text" class="form-input" id="editYear">
         </div>
         <div class="form-group">
-          <label for="editDoi">DOI/链接</label>
+          <label for="editDoi">${currentLanguage === 'zh' ? 'DOI/链接' : 'DOI/Link'}</label>
           <input type="text" class="form-input" id="editDoi">
         </div>
       `;
@@ -1202,32 +1417,30 @@
       if (!editMode) return;
       
       const item = document.querySelector(`.list-item[data-id="${id}"]`);
-      const title = item.querySelector('h4').textContent;
-      const details = item.querySelector('p').textContent;
-      const description = item.querySelector('.muted').textContent;
+      if (!item) return;
       
-      // 解析详细信息
-      const parts = details.split('•');
-      const journal = parts[0]?.trim() || '';
-      const year = parts[1]?.trim() || '';
-      const doi = parts[2]?.trim() || '';
+      const title = item.querySelector('.pub-title').textContent;
+      const journal = item.querySelector('.pub-journal').textContent;
+      const year = item.querySelector('.pub-year').textContent;
+      const doi = item.querySelector('.pub-doi').textContent;
+      const description = item.querySelector('.pub-description').textContent;
       
       currentEditingId = id;
       currentEditingType = 'publication';
-      document.getElementById('modalTitle').textContent = '编辑出版物';
+      document.getElementById('modalTitle').textContent = currentLanguage === 'zh' ? '编辑出版物' : 'Edit Publication';
       
       // 设置表单字段
       document.getElementById('editFields').innerHTML = `
         <div class="form-group">
-          <label for="editJournal">期刊/会议</label>
+          <label for="editJournal">${currentLanguage === 'zh' ? '期刊/会议' : 'Journal/Conference'}</label>
           <input type="text" class="form-input" id="editJournal" value="${journal}">
         </div>
         <div class="form-group">
-          <label for="editYear">年份</label>
+          <label for="editYear">${currentLanguage === 'zh' ? '年份' : 'Year'}</label>
           <input type="text" class="form-input" id="editYear" value="${year}">
         </div>
         <div class="form-group">
-          <label for="editDoi">DOI/链接</label>
+          <label for="editDoi">${currentLanguage === 'zh' ? 'DOI/链接' : 'DOI/Link'}</label>
           <input type="text" class="form-input" id="editDoi" value="${doi}">
         </div>
       `;
@@ -1240,7 +1453,7 @@
     }
 
     function deletePublication(id) {
-      if (!editMode || !confirm('确定要删除这个出版物吗？')) return;
+      if (!editMode || !confirm(currentLanguage === 'zh' ? '确定要删除这个出版物吗？' : 'Are you sure you want to delete this publication?')) return;
       
       const item = document.querySelector(`.list-item[data-id="${id}"]`);
       if (item) {
@@ -1248,23 +1461,27 @@
       }
     }
 
-    // 人员操作
+    // 人员操作 - 修复了指向问题
     function addPerson() {
       if (!editMode) return;
       
       currentEditingType = 'person';
       currentEditingId = null;
-      document.getElementById('modalTitle').textContent = '添加团队成员';
+      document.getElementById('modalTitle').textContent = currentLanguage === 'zh' ? '添加团队成员' : 'Add Team Member';
       
       // 设置表单字段
       document.getElementById('editFields').innerHTML = `
         <div class="form-group">
-          <label for="editRole">职位/角色</label>
+          <label for="editRole">${currentLanguage === 'zh' ? '职位/角色' : 'Position/Role'}</label>
           <input type="text" class="form-input" id="editRole">
         </div>
         <div class="form-group">
-          <label for="editStatus">年级/状态</label>
-          <input type="text" class="form-input" id="editStatus">
+          <label for="editTitleField">${currentLanguage === 'zh' ? '头衔/年级' : 'Title/Year'}</label>
+          <input type="text" class="form-input" id="editTitleField">
+        </div>
+        <div class="form-group">
+          <label for="editResearch">${currentLanguage === 'zh' ? '研究方向' : 'Research Direction'}</label>
+          <input type="text" class="form-input" id="editResearch">
         </div>
       `;
       
@@ -1272,49 +1489,78 @@
       document.getElementById('editTitle').value = '';
       document.getElementById('editContent').value = '';
       document.getElementById('editRole').value = '';
-      document.getElementById('editStatus').value = '';
+      document.getElementById('editTitleField').value = '';
+      document.getElementById('editResearch').value = '';
       
       document.getElementById('editModal').classList.add('show');
     }
 
     function editPerson(id) {
-      if (!editMode) return;
+      if (!editMode) {
+        console.log('Edit mode is not enabled');
+        return;
+      }
+      
+      console.log('Editing person with id:', id);
       
       const item = document.querySelector(`.list-item[data-id="${id}"]`);
-      const name = item.querySelector('h4').textContent;
-      const role = item.querySelector('p').textContent;
-      const research = item.querySelector('.muted').textContent;
+      if (!item) {
+        console.log('Person item not found');
+        return;
+      }
       
-      // 解析角色信息
-      const roleParts = role.split('•');
-      const position = roleParts[0]?.trim() || '';
-      const status = roleParts[1]?.trim() || '';
+      const nameElement = item.querySelector('.person-name');
+      const roleElement = item.querySelector('.person-role strong');
+      const titleElement = item.querySelector('.person-title');
+      const researchElement = item.querySelector('.person-research');
+      
+      if (!nameElement || !roleElement || !titleElement || !researchElement) {
+        console.log('One or more elements not found in person item');
+        return;
+      }
+      
+      const name = nameElement.textContent;
+      const role = roleElement.textContent;
+      const title = titleElement.textContent;
+      let research = researchElement.textContent;
+      
+      // 移除研究方向前缀
+      if (currentLanguage === 'zh') {
+        research = research.replace('研究方向：', '');
+      } else {
+        research = research.replace('Research: ', '');
+      }
       
       currentEditingId = id;
       currentEditingType = 'person';
-      document.getElementById('modalTitle').textContent = '编辑团队成员';
+      document.getElementById('modalTitle').textContent = currentLanguage === 'zh' ? '编辑团队成员' : 'Edit Team Member';
       
       // 设置表单字段
       document.getElementById('editFields').innerHTML = `
         <div class="form-group">
-          <label for="editRole">职位/角色</label>
-          <input type="text" class="form-input" id="editRole" value="${position}">
+          <label for="editRole">${currentLanguage === 'zh' ? '职位/角色' : 'Position/Role'}</label>
+          <input type="text" class="form-input" id="editRole" value="${role}">
         </div>
         <div class="form-group">
-          <label for="editStatus">年级/状态</label>
-          <input type="text" class="form-input" id="editStatus" value="${status}">
+          <label for="editTitleField">${currentLanguage === 'zh' ? '头衔/年级' : 'Title/Year'}</label>
+          <input type="text" class="form-input" id="editTitleField" value="${title}">
+        </div>
+        <div class="form-group">
+          <label for="editResearch">${currentLanguage === 'zh' ? '研究方向' : 'Research Direction'}</label>
+          <input type="text" class="form-input" id="editResearch" value="${research}">
         </div>
       `;
       
       // 填充表单
       document.getElementById('editTitle').value = name;
-      document.getElementById('editContent').value = research.replace('研究方向：', '');
+      document.getElementById('editContent').value = ''; // 内容字段不再使用
       
       document.getElementById('editModal').classList.add('show');
+      console.log('Edit modal opened for person:', name);
     }
 
     function deletePerson(id) {
-      if (!editMode || !confirm('确定要删除这个成员吗？')) return;
+      if (!editMode || !confirm(currentLanguage === 'zh' ? '确定要删除这个成员吗？' : 'Are you sure you want to delete this member?')) return;
       
       const item = document.querySelector(`.list-item[data-id="${id}"]`);
       if (item) {
@@ -1343,9 +1589,13 @@
         if (currentEditingId) {
           // 更新现有出版物
           const item = document.querySelector(`.list-item[data-id="${currentEditingId}"]`);
-          item.querySelector('h4').textContent = title;
-          item.querySelector('p').innerHTML = `<strong>${journal}</strong> • ${year} • ${doi}`;
-          item.querySelector('.muted').textContent = content;
+          if (item) {
+            item.querySelector('.pub-title').textContent = title;
+            item.querySelector('.pub-journal').textContent = journal;
+            item.querySelector('.pub-year').textContent = year;
+            item.querySelector('.pub-doi').textContent = doi;
+            item.querySelector('.pub-description').textContent = content;
+          }
         } else {
           // 添加新出版物
           const list = document.getElementById('publications-list');
@@ -1356,13 +1606,13 @@
           newItem.innerHTML = `
             <div class="item-content">
               <div class="item-text">
-                <h4>${title}</h4>
-                <p><strong>${journal}</strong> • ${year} • ${doi}</p>
-                <p class="muted">${content}</p>
+                <h4 class="pub-title">${title}</h4>
+                <p class="pub-details"><strong class="pub-journal">${journal}</strong> • <span class="pub-year">${year}</span> • <span class="pub-doi">${doi}</span></p>
+                <p class="muted pub-description">${content}</p>
               </div>
-              <div class="item-actions" style="display: flex;">
-                <button class="control-btn edit" onclick="editPublication(${newId})">编辑</button>
-                <button class="control-btn delete" onclick="deletePublication(${newId})">删除</button>
+              <div class="item-actions" style="display: none;">
+                <button class="control-btn edit" onclick="editPublication(${newId})">${currentLanguage === 'zh' ? '编辑' : 'Edit'}</button>
+                <button class="control-btn delete" onclick="deletePublication(${newId})">${currentLanguage === 'zh' ? '删除' : 'Delete'}</button>
               </div>
             </div>
           `;
@@ -1370,14 +1620,18 @@
         }
       } else if (currentEditingType === 'person') {
         const role = document.getElementById('editRole').value;
-        const status = document.getElementById('editStatus').value;
+        const titleField = document.getElementById('editTitleField').value;
+        const research = document.getElementById('editResearch').value;
         
         if (currentEditingId) {
           // 更新现有人员
           const item = document.querySelector(`.list-item[data-id="${currentEditingId}"]`);
-          item.querySelector('h4').textContent = title;
-          item.querySelector('p').innerHTML = `<strong>${role}</strong> • ${status}`;
-          item.querySelector('.muted').textContent = `研究方向：${content}`;
+          if (item) {
+            item.querySelector('.person-name').textContent = title;
+            item.querySelector('.person-role strong').textContent = role;
+            item.querySelector('.person-title').textContent = titleField;
+            item.querySelector('.person-research').textContent = currentLanguage === 'zh' ? `研究方向：${research}` : `Research: ${research}`;
+          }
         } else {
           // 添加新人员
           const list = document.getElementById('people-list');
@@ -1388,13 +1642,13 @@
           newItem.innerHTML = `
             <div class="item-content">
               <div class="item-text">
-                <h4>${title}</h4>
-                <p><strong>${role}</strong> • ${status}</p>
-                <p class="muted">研究方向：${content}</p>
+                <h4 class="person-name">${title}</h4>
+                <p class="person-role"><strong>${role}</strong> • <span class="person-title">${titleField}</span></p>
+                <p class="muted person-research">${currentLanguage === 'zh' ? '研究方向：' : 'Research: '}${research}</p>
               </div>
-              <div class="item-actions" style="display: flex;">
-                <button class="control-btn edit" onclick="editPerson(${newId})">编辑</button>
-                <button class="control-btn delete" onclick="deletePerson(${newId})">删除</button>
+              <div class="item-actions" style="display: none;">
+                <button class="control-btn edit" onclick="editPerson(${newId})">${currentLanguage === 'zh' ? '编辑' : 'Edit'}</button>
+                <button class="control-btn delete" onclick="deletePerson(${newId})">${currentLanguage === 'zh' ? '删除' : 'Delete'}</button>
               </div>
             </div>
           `;
@@ -1410,14 +1664,30 @@
       if (!editMode) return;
       
       // 这里可以添加保存到服务器的逻辑
-      alert('所有修改已保存！');
+      alert(currentLanguage === 'zh' ? '所有修改已保存！' : 'All changes saved!');
     }
 
     // 初始化页面
     document.addEventListener('DOMContentLoaded', function() {
       // 设置默认页面
       showPage('home');
+      
+      // 从本地存储加载语言偏好
+      const savedLanguage = localStorage.getItem('siteLanguage') || 'zh';
+      currentLanguage = savedLanguage;
+      applyLanguage(currentLanguage);
+      
+      // 更新语言按钮状态
+      const languageBtn = document.getElementById('languageBtn');
+      if (currentLanguage === 'zh') {
+        languageBtn.innerHTML = '<span class="lang-flag">🇨🇳</span><span>中文</span>';
+      } else {
+        languageBtn.innerHTML = '<span class="lang-flag">🇺🇸</span><span>English</span>';
+      }
+      
+      // 初始化人员页面事件监听
+      initPeoplePage();
     });
-  </script>
-</body>
-</html>
+    
+    // 初始化人员页面事件监听
+    function initPeoplePage(
