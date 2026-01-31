@@ -10,13 +10,13 @@
   <style>
     :root{
       /* 调色：深邃科技风 */
-      --bg-1: #050814;         /* very dark navy */
-      --bg-2: #071428;         /* deep blue gradient end */
+      --bg-1: #050814;
+      --bg-2: #071428;
       --card-bg: rgba(255,255,255,0.03);
       --card-glass: rgba(255,255,255,0.04);
       --muted: #9fb0bf;
-      --accent-1: #22d3aa;    /* teal */
-      --accent-2: #7c6cff;    /* violet */
+      --accent-1: #22d3aa;
+      --accent-2: #7c6cff;
       --text: #eaf6ff;
       --subtle: rgba(255,255,255,0.04);
       --radius: 14px;
@@ -113,7 +113,6 @@
       align-items:start;
     }
 
-    /* 卡片样式，使用毛玻璃＋柔和渐变 */
     .card{
       background: linear-gradient(180deg, rgba(255,255,255,0.018), rgba(255,255,255,0.01));
       padding:22px;
@@ -125,7 +124,6 @@
       overflow:visible;
     }
 
-    /* Ensure views/cards keep consistent dark translucent look */
     .view { background: transparent; color: var(--text); }
 
     h2{margin:0 0 8px 0;color:var(--text);font-size:18px}
@@ -140,17 +138,14 @@
 
     footer{margin-top:28px;text-align:center;color:var(--muted);font-size:13px}
 
-    /* bilingual control */
     [lang="en"],[lang="zh"]{display:none}
     .lang-zh [lang="zh"], .lang-en [lang="en"]{display:block}
 
-    /* page views */
     .view{display:none}
     .view.active{display:block;animation:fadeIn .18s ease both}
 
     @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-    /* poster image: give a subtle card-like background so a missing/white image doesn't break visual flow */
     .poster{
       border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);
       background:linear-gradient(180deg, rgba(124,108,255,0.04), rgba(34,211,170,0.02));
@@ -165,10 +160,69 @@
     .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);font-weight:600}
     .small{font-size:13px;padding:8px 10px;border-radius:8px}
 
-    /* 强调：确保卡片在内容很长时仍然拥有背景和圆角 */
     section.card { overflow:visible; }
 
-    /* responsive */
+    /* 编辑相关样式 */
+    .edit-toggle{
+      background:linear-gradient(90deg,var(--accent-1),var(--accent-2));
+      color:#021;border:0;padding:8px 16px;border-radius:8px;cursor:pointer;
+      font-weight:600;font-size:13px;margin-left:auto;display:flex;align-items:center;gap:6px;
+      box-shadow:0 4px 12px rgba(34,211,170,0.1);
+    }
+
+    .editable{
+      border:1px dashed rgba(34,211,170,0.3);border-radius:4px;padding:4px 8px;margin:2px 0;
+      transition: all 0.2s ease;
+    }
+
+    .editable:hover{
+      border-color:var(--accent-1);background:rgba(34,211,170,0.05);
+    }
+
+    .editable:focus{
+      outline:none;border:1px solid var(--accent-1);background:rgba(34,211,170,0.08);
+    }
+
+    .edit-controls{
+      display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;
+    }
+
+    .edit-btn{
+      background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:var(--text);
+      padding:6px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:500;
+    }
+
+    .edit-btn:hover{
+      background:rgba(255,255,255,0.1);
+    }
+
+    .edit-btn.add{
+      background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:#021;
+    }
+
+    .edit-btn.remove{
+      background:rgba(255,100,100,0.2);color:#ff6b6b;
+    }
+
+    .edit-modal{
+      position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(5,8,20,0.8);
+      display:flex;align-items:center;justify-content:center;z-index:1000;backdrop-filter:blur(4px);
+    }
+
+    .edit-modal-content{
+      background:linear-gradient(180deg, var(--bg-2), var(--bg-1));padding:24px;border-radius:16px;
+      width:90%;max-width:500px;border:1px solid var(--subtle);box-shadow:var(--shadow);
+    }
+
+    .edit-modal textarea{
+      width:100%;min-height:120px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);
+      border-radius:8px;padding:12px;color:var(--text);font-family:inherit;margin:12px 0;
+    }
+
+    .edit-modal-buttons{
+      display:flex;gap:10px;justify-content:flex-end;margin-top:16px;
+    }
+
     @media (max-width:980px){
       main{grid-template-columns:1fr}
       aside{order:2}
@@ -178,6 +232,7 @@
       header{flex-direction:column;align-items:stretch}
       nav{flex-wrap:wrap;justify-content:flex-start}
       .logo{width:56px;height:56px;font-size:20px}
+      .edit-toggle{margin:10px 0 0 0;align-self:flex-start}
     }
   </style>
 </head>
@@ -197,22 +252,46 @@
         <a data-page="publications" class="nav-link"><span lang="zh">出版物</span><span lang="en">Publications</span></a>
         <a data-page="people" class="nav-link"><span lang="zh">人员</span><span lang="en">People</span></a>
         <a data-page="positions" class="nav-link"><span lang="zh">招聘</span><span lang="en">Positions</span></a>
+        <button class="edit-toggle" id="editToggle">
+          <span lang="zh">编辑模式</span><span lang="en">Edit Mode</span>
+        </button>
         <button class="lang-toggle" id="langBtn" aria-label="切换语言">中文 / EN</button>
       </nav>
     </header>
 
     <main>
+      <!-- 编辑面板 -->
+      <aside>
+        <div class="card" id="editPanel" style="display:none;">
+          <h3 lang="zh">内容编辑</h3>
+          <h3 lang="en">Content Editor</h3>
+          <p class="muted" lang="zh">选择要编辑的内容区域</p>
+          <p class="muted" lang="en">Select content area to edit</p>
+          
+          <div class="edit-controls">
+            <button class="edit-btn" data-edit="home" lang="zh">编辑主页</button>
+            <button class="edit-btn" data-edit="home" lang="en">Edit Home</button>
+            <button class="edit-btn" data-edit="publications" lang="zh">编辑出版物</button>
+            <button class="edit-btn" data-edit="publications" lang="en">Edit Publications</button>
+            <button class="edit-btn" data-edit="people" lang="zh">编辑人员</button>
+            <button class="edit-btn" data-edit="people" lang="en">Edit People</button>
+            <button class="edit-btn" data-edit="positions" lang="zh">编辑招聘</button>
+            <button class="edit-btn" data-edit="positions" lang="en">Edit Positions</button>
+          </div>
+        </div>
+      </aside>
+
       <!-- HOME -->
       <section class="card view" id="homeView" role="region" aria-labelledby="homeTitle">
         <div class="lang-zh">
           <h2 id="homeTitle" lang="zh">个人与实验室简介</h2>
-          <p lang="zh" class="muted">
+          <p lang="zh" class="muted editable" data-content="homeIntro">
             我是北京邮电大学副教授，研究员，硕士生和博士生导师，长期从事光电子集成电路、智能计算、光传感、光互连及片上系统集成方向研究，以第一及共同作者在Nature Photonics等发表高水平学术论文30余篇，研制世界首台百纳米生物粒子光电智能传感平台，原创性提出百万TOPS通用光学计算芯片、架构及系统，申请国家发明专利10余项，主持/参与国家自然科学基金重大/重点项目、科技部重点研发青年科学家项目、科技部科技创新2030重大项目及国家重点研发计划项目等多项。
           </p>
         </div>
         <div class="lang-en">
           <h2 lang="en">About & Lab</h2>
-          <p lang="en" class="muted">
+          <p lang="en" class="muted editable" data-content="homeIntroEn">
             I am an Associate Professor and Researcher at Beijing University of Posts and Telecommunications (BUPT) and a PhD supervisor. My research focuses on photonic/electronic integrated circuits and related topics.
           </p>
         </div>
@@ -223,7 +302,10 @@
         <div class="lang-zh">
           <h2 id="pubTitle" lang="zh">出版物</h2>
           <p class="muted" lang="zh">（按时间排序，点击链接查看详情）</p>
-          <ol style="margin-top:10px">
+          <div class="edit-controls">
+            <button class="edit-btn add" onclick="addPublication('zh')" lang="zh">添加出版物</button>
+          </div>
+          <ol style="margin-top:10px" id="publicationsListZh">
             <li><strong>示例论文 1</strong> — 期刊名，年份。 <span class="muted">(占位)</span></li>
             <li><strong>示例论文 2</strong> — 期刊名，年份。 <span class="muted">(占位)</span></li>
           </ol>
@@ -231,7 +313,10 @@
         <div class="lang-en">
           <h2 lang="en">Publications</h2>
           <p class="muted" lang="en">(Chronological, click links for details)</p>
-          <ol style="margin-top:10px">
+          <div class="edit-controls">
+            <button class="edit-btn add" onclick="addPublication('en')" lang="en">Add Publication</button>
+          </div>
+          <ol style="margin-top:10px" id="publicationsListEn">
             <li><strong>Sample Paper 1</strong> — Journal, Year. <span class="muted">(placeholder)</span></li>
             <li><strong>Sample Paper 2</strong> — Journal, Year. <span class="muted">(placeholder)</span></li>
           </ol>
@@ -243,7 +328,10 @@
         <div class="lang-zh">
           <h2 id="peopleTitle" lang="zh">人员</h2>
           <p class="muted" lang="zh">研究团队与主要成员</p>
-          <div class="grid">
+          <div class="edit-controls">
+            <button class="edit-btn add" onclick="addPerson('zh')" lang="zh">添加成员</button>
+          </div>
+          <div class="grid" id="peopleListZh">
             <div class="project"><strong>chaow</strong><div class="muted">副教授 / 研究员 / 博导</div></div>
             <div class="project"><strong>A</strong><div class="muted">成员</div></div>
             <div class="project"><strong>B</strong><div class="muted">成员</div></div>
@@ -255,7 +343,10 @@
         <div class="lang-en">
           <h2 lang="en">People</h2>
           <p class="muted" lang="en">Research team and key members</p>
-          <div class="grid">
+          <div class="edit-controls">
+            <button class="edit-btn add" onclick="addPerson('en')" lang="en">Add Member</button>
+          </div>
+          <div class="grid" id="peopleListEn">
             <div class="project"><strong>chaow</strong><div class="muted">Associate Professor / PI / PhD Supervisor</div></div>
             <div class="project"><strong>A</strong><div class="muted">Member</div></div>
             <div class="project"><strong>B</strong><div class="muted">Member</div></div>
@@ -269,94 +360,42 @@
       <section class="card view" id="positionsView" role="region" aria-labelledby="posTitle">
         <div class="lang-zh">
           <h2 id="posTitle" lang="zh">招聘信息（长期）</h2>
-          <p class="muted" lang="zh">长期招收：博士 / 硕士、博士后、实习（连续半年以上）</p>
+          <p class="muted editable" data-content="positionsIntro" lang="zh">长期招收：博士 / 硕士、博士后、实习（连续半年以上）</p>
 
           <h3 lang="zh" style="margin-top:12px">研究方向</h3>
-          <p lang="zh">光电/光子智能计算、具身感知融合与光电系统集成等。</p>
+          <p lang="zh" class="editable" data-content="researchDirections">光电/光子智能计算、具身感知融合与光电系统集成等。</p>
 
           <h3 lang="zh" style="margin-top:12px">你将得到</h3>
-          <ul>
-            <li lang="zh">系统指导：导师在理论与实验研究、论文写作与项目管理方面提供全方位指导；</li>
-            <li lang="zh">产业/项目资源：长期的产学研合作可提供实习与落地项目机会；</li>
-            <li lang="zh">科研支持：竞争性科研补助、设备与材料支持，以及团队福利；</li>
-            <li lang="zh">良好环境：实验室位于海淀校区，科研资源与交通生活便利；</li>
-            <li lang="zh">成长伙伴：重视团队氛围与个人发展，导师注重学术与生活的平衡。</li>
+          <ul id="benefitsListZh">
+            <li lang="zh" class="editable">系统指导：导师在理论与实验研究、论文写作与项目管理方面提供全方位指导；</li>
+            <li lang="zh" class="editable">产业/项目资源：长期的产学研合作可提供实习与落地项目机会；</li>
+            <li lang="zh" class="editable">科研支持：竞争性科研补助、设备与材料支持，以及团队福利；</li>
+            <li lang="zh" class="editable">良好环境：实验室位于海淀校区，科研资源与交通生活便利；</li>
+            <li lang="zh" class="editable">成长伙伴：重视团队氛围与个人发展，导师注重学术与生活的平衡。</li>
           </ul>
 
           <h3 lang="zh" style="margin-top:12px">专业要求</h3>
-          <p lang="zh">计算机、人工智能、微电子、电子、光学、机器人等相关理工科背景优先，欢迎有强烈科研兴趣与创新能力的同学投递简历。</p>
-
-          <h3 lang="zh" style="margin-top:12px">招聘海报</h3>
-          <a href="/assets/positions_poster.png" target="_blank" rel="noopener">
-            <img
-              src="/assets/positions_poster.png"
-              alt="招聘海报"
-              class="poster"
-              onerror="this.onerror=null;this.src='https://via.placeholder.com/800x1131.png?text=Recruitment+Poster+Placeholder';"
-            />
-          </a>
-
-          <div style="margin-top:12px">
-            <p class="muted" lang="zh"><strong>职位截止日期：</strong>滚动招聘（长期接受申请）。如有具体截止日期请见海报或在线申请表。</p>
-            <div class="apply-row">
-              <a class="btn" id="applyFormZH" href="https://forms.gle/your-form-id" target="_blank" rel="noopener">
-                在线申请 / Apply Online
-              </a>
-              <a class="btn btn-ghost" id="applyMailZH" href="mailto:chaow@bupt.edu.cn?subject=2027%2B%E7%9B%B4%E5%8D%9A%2B%5B%E5%A7%93%E5%90%8D%5D">
-                发送简历至 邮箱
-              </a>
-              <span class="muted small" style="align-self:center">邮件主题示例：<strong>“2027+直博+姓名”</strong></span>
-            </div>
-          </div>
-
-          <h3 lang="zh" style="margin-top:12px">联系方式</h3>
-          <p class="muted" lang="zh">如感兴趣，请将简历发送至 <a href="mailto:chaow@bupt.edu.cn">chaow@bupt.edu.cn</a>，邮件主题请注明示例：<strong>“2027+直博+姓名”</strong></p>
+          <p lang="zh" class="editable" data-content="requirements">计算机、人工智能、微电子、电子、光学、机器人等相关理工科背景优先，欢迎有强烈科研兴趣与创新能力的同学投递简历。</p>
         </div>
 
         <div class="lang-en">
           <h2 lang="en">Open Positions (Long-term)</h2>
-          <p class="muted" lang="en">We are recruiting long-term: PhD / Master students, Postdoctoral researchers, Interns (minimum continuous 6 months).</p>
+          <p class="muted editable" data-content="positionsIntroEn" lang="en">We are recruiting long-term: PhD / Master students, Postdoctoral researchers, Interns (minimum continuous 6 months).</p>
 
           <h3 lang="en" style="margin-top:12px">Research Directions</h3>
-          <p lang="en">Edge computing, optoelectronic/photonic intelligent computing, sensing-compute integrated systems, embodied intelligence & security, etc.</p>
+          <p lang="en" class="editable" data-content="researchDirectionsEn">Edge computing, optoelectronic/photonic intelligent computing, sensing-compute integrated systems, embodied intelligence & security, etc.</p>
 
           <h3 lang="en" style="margin-top:12px">What you will get</h3>
-          <ul>
-            <li lang="en">Personal growth: full mentorship from the PI in theory, experiments, and publications;</li>
-            <li lang="en">Industry connections: the PI has extensive industry collaborations and can provide internship and real-world project opportunities;</li>
-            <li lang="en">Research support: competitive material/subsidy support, plus snacks, holiday gifts, and team-building activities;</li>
-            <li lang="en">Excellent research environment: the lab is located inside Haidian campus (within Beijing's 3rd Ring), with abundant resources and convenient transportation;</li>
-            <li lang="en">Friendly mentorship: a young PI who cares about your life and interests — we grow together.</li>
+          <ul id="benefitsListEn">
+            <li lang="en" class="editable">Personal growth: full mentorship from the PI in theory, experiments, and publications;</li>
+            <li lang="en" class="editable">Industry connections: the PI has extensive industry collaborations and can provide internship and real-world project opportunities;</li>
+            <li lang="en" class="editable">Research support: competitive material/subsidy support, plus snacks, holiday gifts, and team-building activities;</li>
+            <li lang="en" class="editable">Excellent research environment: the lab is located inside Haidian campus (within Beijing's 3rd Ring), with abundant resources and convenient transportation;</li>
+            <li lang="en" class="editable">Friendly mentorship: a young PI who cares about your life and interests — we grow together.</li>
           </ul>
 
           <h3 lang="en" style="margin-top:12px">Requirements</h3>
-          <p lang="en">Backgrounds such as Computer Science, AI, Microelectronics, Electronics, Optics, Robotics and other STEM fields are welcome. Strong research motivation and creativity are valued.</p>
-
-          <h3 lang="en" style="margin-top:12px">Recruitment Poster</h3>
-          <a href="/assets/positions_poster.png" target="_blank" rel="noopener">
-            <img
-              src="/assets/positions_poster.png"
-              alt="Recruitment Poster"
-              class="poster"
-              onerror="this.onerror=null;this.src='https://via.placeholder.com/800x1131.png?text=Recruitment+Poster+Placeholder';"
-            />
-          </a>
-
-          <div style="margin-top:12px">
-            <p class="muted" lang="en"><strong>Deadline:</strong> Rolling admissions. See the poster or the online application form for specific deadlines (if any).</p>
-            <div class="apply-row">
-              <a class="btn" id="applyFormEN" href="https://forms.gle/your-form-id" target="_blank" rel="noopener">
-                Apply Online
-              </a>
-              <a class="btn btn-ghost" id="applyMailEN" href="mailto:chaow@bupt.edu.cn?subject=2027%2BDirectPhD%2B%5BYourName%5D">
-                Send CV via Email
-              </a>
-              <span class="muted small" style="align-self:center">Example subject: <strong>"2027+DirectPhD+YourName"</strong></span>
-            </div>
-          </div>
-
-          <h3 lang="en" style="margin-top:12px">Contact</h3>
-          <p class="muted" lang="en">If interested, please send your CV to <a href="mailto:chaow@bupt.edu.cn">chaow@bupt.edu.cn</a>. Use a subject line example: <strong>"2027+DirectPhD+YourName"</strong></p>
+          <p lang="en" class="editable" data-content="requirementsEn">Backgrounds such as Computer Science, AI, Microelectronics, Electronics, Optics, Robotics and other STEM fields are welcome. Strong research motivation and creativity are valued.</p>
         </div>
       </section>
     </main>
@@ -364,6 +403,18 @@
     <footer>
       <p class="muted">© chaow · 北京邮电大学</p>
     </footer>
+  </div>
+
+  <!-- 编辑模态框 -->
+  <div class="edit-modal" id="editModal" style="display:none;">
+    <div class="edit-modal-content">
+      <h3 id="modalTitle">编辑内容</h3>
+      <textarea id="editTextarea"></textarea>
+      <div class="edit-modal-buttons">
+        <button class="edit-btn remove" onclick="closeModal()">取消</button>
+        <button class="edit-btn add" onclick="saveEdit()">保存</button>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -377,6 +428,10 @@
         positions: document.getElementById('positionsView')
       };
 
+      let editMode = false;
+      let currentEditingElement = null;
+
+      // 页面导航功能
       function setActive(pageKey, push){
         Object.values(views).forEach(v=>v.classList.remove('active'));
         if(views[pageKey]) views[pageKey].classList.add('active');
@@ -384,24 +439,21 @@
         if(push) history.pushState({page:pageKey}, '', '#'+pageKey);
       }
 
-      // nav clicks
       links.forEach(a=>{
         a.addEventListener('click', ()=>{
           setActive(a.dataset.page, true);
         });
       });
 
-      // initial page from hash
       const initial = location.hash ? location.hash.replace('#','') : 'home';
       setActive(initial, false);
 
-      // handle back/forward
       window.addEventListener('popstate', (e)=>{
         const p = (location.hash && location.hash.replace('#','')) || 'home';
         setActive(p, false);
       });
 
-      // language toggle
+      // 语言切换功能
       const btn = document.getElementById('langBtn');
       const stored = localStorage.getItem('site-lang') || 'zh';
       function applyLang(lang){
@@ -413,8 +465,114 @@
       applyLang(stored==='en'?'en':'zh');
       btn.addEventListener('click', ()=>{ const current = localStorage.getItem('site-lang')==='en'?'en':'zh'; applyLang(current==='en'?'zh':'en'); });
 
-      // small enhancement: if poster image not found in repo, leave placeholder handled by onerror attr above.
-      // Accessibility: add keyboard support for nav
+      // 编辑模式切换
+      const editToggle = document.getElementById('editToggle');
+      const editPanel = document.getElementById('editPanel');
+      
+      editToggle.addEventListener('click', ()=>{
+        editMode = !editMode;
+        toggleEditMode(editMode);
+      });
+
+      function toggleEditMode(enabled){
+        editMode = enabled;
+        const editables = document.querySelectorAll('.editable');
+        
+        editables.forEach(el => {
+          if(enabled){
+            el.setAttribute('contenteditable', 'true');
+            el.style.cursor = 'text';
+          }else{
+            el.removeAttribute('contenteditable');
+            el.style.cursor = 'default';
+            el.style.borderColor = 'transparent';
+          }
+        });
+
+        editPanel.style.display = enabled ? 'block' : 'none';
+        editToggle.style.background = enabled ? 
+          'linear-gradient(90deg, #ff6b6b, #ffa726)' : 
+          'linear-gradient(90deg,var(--accent-1),var(--accent-2))';
+        
+        editToggle.innerHTML = enabled ? 
+          '<span lang="zh">退出编辑</span><span lang="en">Exit Edit</span>' : 
+          '<span lang="zh">编辑模式</span><span lang="en">Edit Mode</span>';
+      }
+
+      // 编辑按钮事件
+      document.querySelectorAll('.edit-btn[data-edit]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetView = btn.dataset.edit;
+          setActive(targetView, true);
+        });
+      });
+
+      // 可编辑元素点击事件
+      document.addEventListener('click', (e) => {
+        if(editMode && e.target.classList.contains('editable')){
+          openEditor(e.target);
+        }
+      });
+
+      // 模态框功能
+      function openEditor(element){
+        currentEditingElement = element;
+        const modal = document.getElementById('editModal');
+        const textarea = document.getElementById('editTextarea');
+        const title = document.getElementById('modalTitle');
+        
+        title.textContent = element.closest('[lang]').getAttribute('lang') === 'en' ? 
+          'Edit Content' : '编辑内容';
+        textarea.value = element.textContent;
+        modal.style.display = 'flex';
+      }
+
+      window.closeModal = function(){
+        document.getElementById('editModal').style.display = 'none';
+        currentEditingElement = null;
+      }
+
+      window.saveEdit = function(){
+        if(currentEditingElement){
+          currentEditingElement.textContent = document.getElementById('editTextarea').value;
+          closeModal();
+        }
+      }
+
+      // 添加出版物功能
+      window.addPublication = function(lang){
+        const title = prompt(lang === 'zh' ? '请输入论文标题：' : 'Please enter paper title:');
+        const journal = prompt(lang === 'zh' ? '请输入期刊/会议名称：' : 'Please enter journal/conference:');
+        const year = prompt(lang === 'zh' ? '请输入年份：' : 'Please enter year:');
+        
+        if(title && journal && year){
+          const list = document.getElementById(`publicationsList${lang === 'zh' ? 'Zh' : 'En'}`);
+          const li = document.createElement('li');
+          li.innerHTML = `<strong>${title}</strong> — ${journal}，${year}。`;
+          li.classList.add('editable');
+          li.style.cursor = editMode ? 'text' : 'default';
+          li.setAttribute('contenteditable', editMode);
+          list.appendChild(li);
+        }
+      }
+
+      // 添加人员功能
+      window.addPerson = function(lang){
+        const name = prompt(lang === 'zh' ? '请输入成员姓名：' : 'Please enter member name:');
+        const role = prompt(lang === 'zh' ? '请输入成员角色：' : 'Please enter member role:');
+        
+        if(name && role){
+          const grid = document.getElementById(`peopleList${lang === 'zh' ? 'Zh' : 'En'}`);
+          const div = document.createElement('div');
+          div.className = 'project editable';
+          div.innerHTML = `<strong>${name}</strong><div class="muted">${role}</div>`;
+          div.style.cursor = editMode ? 'text' : 'default';
+          div.setAttribute('contenteditable', editMode);
+          grid.appendChild(div);
+        }
+      }
+
+      // 键盘支持
       links.forEach(a=>{
         a.addEventListener('keydown', (e)=>{
           if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); a.click(); }
